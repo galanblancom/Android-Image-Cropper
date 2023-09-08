@@ -35,16 +35,13 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.provider.MediaStore;
 
+import androidx.annotation.NonNull;
+
 import java.io.File;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import androidx.annotation.DrawableRes;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
-import androidx.fragment.app.Fragment;
 
 /**
  * Helper to simplify crop image work like starting pick-image acitvity and handling camera/gallery
@@ -339,11 +336,16 @@ public final class CropImage {
    * @param context used to access Android APIs, like content resolve, it is your
    *     activity/fragment/widget.
    */
-  public static Uri getCaptureImageOutputUri(@NonNull Context context) {
+  public static Uri getCaptureImageOutputUri(@nonnull Context context) {
     Uri outputFileUri = null;
     File getImage = context.getExternalCacheDir();
     if (getImage != null) {
-      outputFileUri = Uri.fromFile(new File(getImage.getPath(), "pickImageResult.jpeg"));
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+        outputFileUri = FileProvider.getUriForFile(context, BuildConfig.APPLICATION_ID + ".provider",
+                new File(getImage.getPath(), "pickImageResult.jpeg"));
+      } else {
+        outputFileUri = Uri.fromFile(new File(getImage.getPath(), "pickImageResult.jpeg"));
+      }
     }
     return outputFileUri;
   }
