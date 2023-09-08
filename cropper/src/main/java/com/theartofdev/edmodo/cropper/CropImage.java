@@ -35,7 +35,12 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.provider.MediaStore;
 
+import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
+import androidx.core.content.FileProvider;
+import androidx.fragment.app.Fragment;
 
 import java.io.File;
 import java.io.InputStream;
@@ -336,12 +341,12 @@ public final class CropImage {
    * @param context used to access Android APIs, like content resolve, it is your
    *     activity/fragment/widget.
    */
-  public static Uri getCaptureImageOutputUri(@nonnull Context context) {
+  public static Uri getCaptureImageOutputUri(@NonNull Context context) {
     Uri outputFileUri = null;
     File getImage = context.getExternalCacheDir();
     if (getImage != null) {
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-        outputFileUri = FileProvider.getUriForFile(context, BuildConfig.APPLICATION_ID + ".provider",
+        outputFileUri = FileProvider.getUriForFile(context, "com.theartofdev.edmodo.cropper.quick.start.provider",
                 new File(getImage.getPath(), "pickImageResult.jpeg"));
       } else {
         outputFileUri = Uri.fromFile(new File(getImage.getPath(), "pickImageResult.jpeg"));
